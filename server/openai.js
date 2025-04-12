@@ -28,11 +28,11 @@ const getOpenAIClient = () => {
  * @returns The URL of the generated image
  */
 export async function generateImage(
-    prompt: string,
-    size: '1024x1024' | '1792x1024' | '1024x1792' = '1024x1024',
+    prompt,
+    size = '1024x1024',
     model = 'dall-e-3',
-    quality: 'standard' | 'hd' = 'hd'
-): Promise<string> {
+    quality = 'hd'
+) {
     try {
         const openai = getOpenAIClient();
         const response = await openai.images.generate({
@@ -58,8 +58,8 @@ export async function generateImage(
  * @returns The generated text
  */
 export async function generateCompletion(
-    prompt: string
-): Promise<string> {
+    prompt
+) {
     try {
         const openai = getOpenAIClient();
         const response = await openai.chat.completions.create({
@@ -84,8 +84,8 @@ export async function generateCompletion(
  * @returns The URL of the generated image and the enhanced prompt
  */
 export async function generateEnhancedImage(
-    userPrompt: string
-): Promise<string> {
+    userPrompt
+) {
     try {
         // Step 1: Enhance the prompt with GPT-4o
         //     const promptEnhancementInstruction = `Create a detailed, vivid image description based on this idea: "${userPrompt}". 

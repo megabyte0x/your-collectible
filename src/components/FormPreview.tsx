@@ -157,9 +157,11 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
         setImageGenerationError(null);
         setShowConfirmModal(false);
 
+        const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+
         try {
             // Call the API endpoint instead of directly using OpenAI
-            const response = await fetch('/api/generate-image', {
+            const response = await fetch(`${serverUrl}/api/generate-image`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -168,20 +170,37 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
                     prompt: generatedPrompt,
                     enhance: false // set to true if you want enhancement
                 }),
+                // Add a client-side timeout
+                signal: AbortSignal.timeout(15000), // 15 second timeout
             });
 
             if (!response.ok) {
-                throw new Error('Failed to generate image');
+                const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+                throw new Error(errorData.error || `Server responded with ${response.status}`);
             }
 
             const data = await response.json();
+            if (!data.imageUrl) {
+                throw new Error('No image URL returned from server');
+            }
+
             setGeneratedImageUrl(data.imageUrl.toString());
             if (context?.user?.fid) {
                 await updateGenerationCount(context.user.fid);
             }
         } catch (error) {
             console.error("Error generating image:", error);
-            setImageGenerationError("Failed to generate image. Please try again.");
+            let errorMessage = "Failed to generate image. Please try again.";
+
+            if (error instanceof Error) {
+                if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+                    errorMessage = "Image generation timed out. Please try a simpler prompt or try again later.";
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+            }
+
+            setImageGenerationError(errorMessage);
         } finally {
             setIsGeneratingImage(false);
         }
