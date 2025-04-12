@@ -161,7 +161,7 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
 
         try {
             // Call the API endpoint instead of directly using OpenAI
-            const response = await fetch(`${serverUrl}/api/generate-image`, {
+            const response = await fetch(`${serverUrl}/generate-image`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -169,9 +169,7 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
                 body: JSON.stringify({
                     prompt: generatedPrompt,
                     enhance: false // set to true if you want enhancement
-                }),
-                // Add a client-side timeout
-                signal: AbortSignal.timeout(15000), // 15 second timeout
+                })
             });
 
             if (!response.ok) {
