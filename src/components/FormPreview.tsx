@@ -6,6 +6,7 @@ import ColorPicker from "./form/ColorPicker";
 import AccessoryItems from "./form/AccessoryItems";
 import { Button } from "./ui/Button";
 import Image from "next/image";
+import { sdk, ComposeCast } from "@farcaster/frame-sdk";
 export type FormData = {
     ethnicity: string;
     gender: string;
@@ -47,6 +48,7 @@ export default function FormPreview() {
     const [isGeneratingImage, setIsGeneratingImage] = useState<boolean>(false);
     const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
     const [imageGenerationError, setImageGenerationError] = useState<string | null>(null);
+    const [castHash, setCastHash] = useState<string | null>(null);
 
     // Define total number of steps (groups)
     const totalSteps = 6;
@@ -171,7 +173,7 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
             }
 
             const data = await response.json();
-            setGeneratedImageUrl(data.imageUrl);
+            setGeneratedImageUrl(data.imageUrl.toString());
         } catch (error) {
             console.error("Error generating image:", error);
             setImageGenerationError("Failed to generate image. Please try again.");
@@ -179,6 +181,21 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
             setIsGeneratingImage(false);
         }
     };
+
+    const handleCast = async () => {
+        try {
+            const result: ComposeCast.Result<false> = await sdk.actions.composeCast({
+                text: "Generated my collectible! using collectible.megabyte0x.xyz",
+                embeds: [
+                    `${generatedImageUrl}`
+                ],
+                close: false,
+            });
+            setCastHash(result.cast.hash);
+        } catch (error) {
+            console.error("Error posting cast:", error);
+        }
+    }
 
     useEffect(() => {
         console.log("Current step changed to:", currentStep);
@@ -318,13 +335,18 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
                                     </div>
                                 ) : null}
                                 <Image
-                                    src={`${generatedImageUrl}`}
+                                    src={generatedImageUrl}
                                     alt="Generated collectible"
                                     className="w-full h-full object-cover"
                                     width={1024}
                                     height={1024}
                                 />
                             </div>
+                            <Button
+                                onClick={() => handleCast()}
+                            >
+                                Cast your collectible!
+                            </Button>
                             <Button
                                 onClick={() => {
                                     setIsGeneratingImage(true);
@@ -382,9 +404,7 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
                         </div>
                         <Button
                             onClick={() => {
-                                setIsGeneratingImage(true);
-                                setImageGenerationError(null);
-                                handleGenerateImage();
+                                setShowConfirmModal(true);
                             }}
                             className="w-full py-2"
                             disabled={isGeneratingImage}
