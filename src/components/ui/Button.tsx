@@ -1,12 +1,24 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   isLoading?: boolean;
+  variant?: 'default' | 'ghost';
 }
 
-export function Button({ children, className = "", isLoading = false, ...props }: ButtonProps) {
+export function Button({
+  children,
+  className = "",
+  isLoading = false,
+  variant = 'default',
+  ...props
+}: ButtonProps) {
+  const variantClasses = {
+    default: 'bg-blue-600 text-white hover:bg-blue-700 disabled:hover:bg-blue-600',
+    ghost: 'bg-transparent text-gray-800 hover:bg-gray-100 hover:text-gray-900'
+  };
+
   return (
     <button
-      className={`w-full max-w-xs mx-auto block bg-[#7C65C1] text-white py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#7C65C1] hover:bg-[#6952A3] ${className}`}
+      className={`w-full max-w-xs mx-auto block py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${variantClasses[variant]} ${className}`}
       {...props}
     >
       {isLoading ? (
