@@ -452,7 +452,7 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
         return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                 <div className="bg-[#FDFDFD] rounded-lg p-6 max-w-md w-full">
-                    <h3 className="text-xl font-semibold mb-4">Would you like to check once before generating?</h3>
+                    <h3 className="text-xl text-gray-800 font-semibold mb-4">Would you like to check once before generating?</h3>
                     <div className="flex flex-col space-y-3">
                         <Button onClick={handleGenerateImage}>
                             No, I am good!
