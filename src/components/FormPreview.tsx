@@ -182,7 +182,10 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
                 throw new Error('No image URL returned from server');
             }
 
-            setGeneratedImageUrl(data.imageUrl.toString());
+            const b64Image = Buffer.from(data.imageUrl, 'base64');
+            const imageUrl = `data:image/png;base64,${b64Image.toString('base64')}`;
+
+            setGeneratedImageUrl(imageUrl);
             if (context?.user?.fid) {
                 await updateGenerationCount(context.user.fid);
             }
