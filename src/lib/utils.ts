@@ -28,7 +28,7 @@ export function cn(...inputs: ClassValue[]) {
 export function getSecretEnvVars() {
   const seedPhrase = process.env.SEED_PHRASE;
   const fid = process.env.FID;
-  
+
   if (!seedPhrase || !fid) {
     return null;
   }
@@ -80,7 +80,7 @@ export async function getFarcasterMetadata(): Promise<FrameMetadata> {
     };
     const encodedPayload = Buffer.from(JSON.stringify(payload), 'utf-8').toString('base64url');
 
-    const signature = await account.signMessage({ 
+    const signature = await account.signMessage({
       message: `${encodedHeader}.${encodedPayload}`
     });
     const encodedSignature = Buffer.from(signature, 'utf-8').toString('base64url');
@@ -95,7 +95,7 @@ export async function getFarcasterMetadata(): Promise<FrameMetadata> {
   // Determine webhook URL based on whether Neynar is enabled
   const neynarApiKey = process.env.NEYNAR_API_KEY;
   const neynarClientId = process.env.NEYNAR_CLIENT_ID;
-  const webhookUrl = neynarApiKey && neynarClientId 
+  const webhookUrl = neynarApiKey && neynarClientId
     ? `https://api.neynar.com/f/app/${neynarClientId}/event`
     : `${appUrl}/api/webhook`;
 

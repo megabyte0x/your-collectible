@@ -6,7 +6,9 @@ import ColorPicker from "./form/ColorPicker";
 import AccessoryItems from "./form/AccessoryItems";
 import { Button } from "./ui/Button";
 import Image from "next/image";
-import { sdk, ComposeCast } from "@farcaster/frame-sdk";
+import { sdk } from "@farcaster/frame-sdk";
+import { useFrame } from "./providers/FrameProvider";
+import { updateGenerationCount } from "~/lib/supbase";
 export type FormData = {
     ethnicity: string;
     gender: string;
@@ -25,6 +27,8 @@ export type FormData = {
 };
 
 export default function FormPreview() {
+    const { context } = useFrame();
+
     const [formData, setFormData] = useState<FormData>({
         ethnicity: "Asian",
         gender: "Male",
@@ -48,7 +52,6 @@ export default function FormPreview() {
     const [isGeneratingImage, setIsGeneratingImage] = useState<boolean>(false);
     const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
     const [imageGenerationError, setImageGenerationError] = useState<string | null>(null);
-    const [castHash, setCastHash] = useState<string | null>(null);
 
     // Define total number of steps (groups)
     const totalSteps = 6;
@@ -174,6 +177,9 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
 
             const data = await response.json();
             setGeneratedImageUrl(data.imageUrl.toString());
+            if (context?.user?.fid) {
+                await updateGenerationCount(context.user.fid);
+            }
         } catch (error) {
             console.error("Error generating image:", error);
             setImageGenerationError("Failed to generate image. Please try again.");
@@ -184,14 +190,14 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
 
     const handleCast = async () => {
         try {
-            const result: ComposeCast.Result<false> = await sdk.actions.composeCast({
+            await sdk.actions.composeCast({
                 text: "Generated my collectible! using collectible.megabyte0x.xyz",
                 embeds: [
-                    `${generatedImageUrl}`
+                    `${generatedImageUrl}`,
+                    `${process.env.NEXT_PUBLIC_URL}`
                 ],
                 close: false,
             });
-            setCastHash(result.cast.hash);
         } catch (error) {
             console.error("Error posting cast:", error);
         }
@@ -284,7 +290,7 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
                                 </label>
                                 <select
                                     id="accessory-position"
-                                    className="w-full p-2 border border-gray-200 rounded-md bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                    className="w-full p-2 border border-gray-200 rounded-md bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-black"
                                     value={formData.accessoryPosition}
                                     onChange={(e) => handleInputChange("accessoryPosition", e.target.value)}
                                 >
