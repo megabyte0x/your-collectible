@@ -451,7 +451,7 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
 
         return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                <div className="bg-white rounded-lg p-6 max-w-md w-full">
+                <div className="bg-[#FDFDFD] rounded-lg p-6 max-w-md w-full">
                     <h3 className="text-xl font-semibold mb-4">Would you like to check once before generating?</h3>
                     <div className="flex flex-col space-y-3">
                         <Button onClick={handleGenerateImage}>
@@ -470,7 +470,7 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
     };
 
     return (
-        <div className="max-w-md mx-auto p-4 min-h-screen">
+        <div className="bg-white max-w-fit mx-auto p-4 min-h-screen">
             <div className="bg-white p-6 pb-8 rounded-lg shadow-sm">
                 <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">Create your Collectible</h1>
 
@@ -520,6 +520,13 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
             </div>
 
             {renderConfirmModal()}
+            <footer className="text-center text-sm text-gray-500">
+                <p>
+                    Made by <a href="https://megabyte0x.xyz" className="underline">megabyte0x</a>
+                </p>
+            </footer>
         </div>
+
+
     );
 } 

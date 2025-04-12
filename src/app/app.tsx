@@ -8,5 +8,11 @@ const FormPreview = dynamic(() => import("../components/FormPreview"), {
 });
 
 export default function App() {
-  return <FormPreview />;
+  return (
+    <div className="bg-[#FDFDFD]">
+      <FormPreview />
+    </div>
+
+
+  );
 }
