@@ -41,9 +41,13 @@ export async function generateImage(
             n: 1,
             size,
             quality,
+            response_format: 'b64_json',
+
         });
 
-        return response.data[0].url || '';
+        console.log("response", response);
+
+        return response.data[0].b64_json;
     } catch (error) {
         console.error('Error generating image with OpenAI:', error);
         throw new Error('Failed to generate image');
