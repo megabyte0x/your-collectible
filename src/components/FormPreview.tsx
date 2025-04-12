@@ -5,7 +5,6 @@ import InputField from "./form/InputField";
 import ColorPicker from "./form/ColorPicker";
 import AccessoryItems from "./form/AccessoryItems";
 import { Button } from "./ui/Button";
-import Image from "next/image";
 import { sdk } from "@farcaster/frame-sdk";
 import { useFrame } from "./providers/FrameProvider";
 import { updateGenerationCount } from "~/lib/supbase";
@@ -340,12 +339,10 @@ The overall aesthetic should resemble premium toy packaging — stylish, minimal
                                         <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full" />
                                     </div>
                                 ) : null}
-                                <Image
+                                <img
                                     src={generatedImageUrl}
                                     alt="Generated collectible"
                                     className="w-full h-full object-cover"
-                                    width={1024}
-                                    height={1024}
                                 />
                             </div>
                             <Button
